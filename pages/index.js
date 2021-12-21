@@ -4,10 +4,21 @@ import { getSortedPostsData } from "../lib/posts";
 import utilStyles from "../styles/utils.module.css";
 import Profile from "./profile";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Home({ allPostsData }) {
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/todos/1")
+      .then((response) => response.json())
+      .then((json) => setTodos(json));
+  }, []);
+
+  console.log("333333333333333333333333333333333333", todos);
   return (
     <Layout home>
+      <h1>Welcome to next.js!</h1>
       <Head>
         <title>{siteTitle}</title>
       </Head>
@@ -31,6 +42,19 @@ export default function Home({ allPostsData }) {
               </Link>
               <br />
               <small className={utilStyles.lightText}>{date}</small>
+            </li>
+          ))}
+        </ul>
+
+        <ul className={utilStyles.list}>
+          {todos.map(({ id, userId, title, completed }) => (
+            <li className={utilStyles.listItem} key={id}>
+              <Link href={`/posts/${id}`}>
+                <a>{title}</a>
+              </Link>
+              <br />
+              <small className={utilStyles.lightText}>{userId}</small>
+              <small className={utilStyles.lightText}>{completed}</small>
             </li>
           ))}
         </ul>

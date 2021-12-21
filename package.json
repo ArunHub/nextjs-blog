@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest index.test.js --watch"
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^5.9.0",
@@ -24,5 +26,15 @@
     "remark": "^14.0.1",
     "remark-html": "^15.0.0",
     "swr": "^1.0.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/react": "^12.1.2",
+    "babel-jest": "^27.3.1",
+    "eslint": "^8.3.0",
+    "eslint-config-next": "12.0.4",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.3.1",
+    "react-test-renderer": "^17.0.2"
   }
 }
