@@ -4,10 +4,11 @@ import { getSortedPostsData } from "../lib/posts";
 import utilStyles from "../styles/utils.module.css";
 import Profile from "./profile";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Home({ allPostsData }) {
   const [todos, setTodos] = useState([]);
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/todos/1")
@@ -15,7 +16,26 @@ export default function Home({ allPostsData }) {
       .then((json) => setTodos(json));
   }, []);
 
-  console.log("333333333333333333333333333333333333", todos);
+  function debouce(fn) {
+    let a = "",
+      timerid;
+    return function (e) {
+      a = a + e;
+      clearTimeout(timerid);
+      timerid = setTimeout(function () {
+        return fn.apply(this, [a]);
+      }, 2000);
+    };
+  }
+
+  const getvalue = debouce(setInputValue);
+
+  const handleChange = useCallback((e) => {
+    const value = e.target.value;
+    console.log("targetvalue", value);
+    getvalue(value);
+  }, []);
+
   return (
     <Layout home>
       <h1>Welcome to next.js!</h1>
@@ -26,6 +46,7 @@ export default function Home({ allPostsData }) {
         <h2>
           <Profile />
         </h2>
+        <input onChange={handleChange} value={inputValue} />
         <p>[Your Self Introduction]</p>
         <p>
           (This is a sample website - you’ll be building a site like this on{" "}
@@ -47,16 +68,18 @@ export default function Home({ allPostsData }) {
         </ul>
 
         <ul className={utilStyles.list}>
-          {todos.map(({ id, userId, title, completed }) => (
-            <li className={utilStyles.listItem} key={id}>
-              <Link href={`/posts/${id}`}>
-                <a>{title}</a>
-              </Link>
-              <br />
-              <small className={utilStyles.lightText}>{userId}</small>
-              <small className={utilStyles.lightText}>{completed}</small>
-            </li>
-          ))}
+          {todos.length
+            ? todos.map(({ id, userId, title, completed }) => (
+                <li className={utilStyles.listItem} key={id}>
+                  <Link href={`/posts/${id}`}>
+                    <a>{title}</a>
+                  </Link>
+                  <br />
+                  <small className={utilStyles.lightText}>{userId}</small>
+                  <small className={utilStyles.lightText}>{completed}</small>
+                </li>
+              ))
+            : null}
         </ul>
       </section>
     </Layout>
